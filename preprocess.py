@@ -41,7 +41,7 @@ def main():
 
     # input_dir: directory containing unscaled images (original dimensions in 720x720)
     # output_dir: directory where downscaled images will be stored
-    preprocess_images("./scala-data/modified_images/", "./scala-data/preprocessed_modified_images/", transfer_learning=transfer_learning)
+    preprocess_images("./scala-data/images/", "./scala-data/preprocessed_images/", transfer_learning=transfer_learning)
 
 if __name__ == "__main__":
     main()

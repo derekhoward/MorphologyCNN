@@ -73,7 +73,7 @@ def main():
     cell_label_pred = {}
     for cell, label in test_cells.items():
         try:
-            img = Image.open(f"./scala-data/preprocessed_modified_images/{cell}.png")
+            img = Image.open(f"./scala-data/preprocessed_images/{cell}.png")
             output = model(trans(img).unsqueeze(0))
             output = output.detach().numpy()[0]
             pred = np.argmax(output)
@@ -128,7 +128,7 @@ def main():
     cbar = hm.collections[0].colorbar
     cbar.ax.tick_params(labelsize=17)
     plt.subplots_adjust(bottom=0.28, left=0.28)
-    plt.savefig("./scala-data/plots/inference_t_type_modified.png")
+    plt.savefig("./scala-data/plots/inference_t_type.png")
 
 
 if __name__ == "__main__":

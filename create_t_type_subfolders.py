@@ -9,61 +9,78 @@ import pandas as pd
 # Creating subfolders with T-types as names
 # ******************************************************************************
 
-df = pd.read_csv("./combined-data/combined_metadata.csv", index_col=0)
-cells, labels = [], []
-subclasses = {}
+df = pd.read_csv("./gouwens-data/filtered_t_types.csv", index_col=0)
+
+# Identify cell types with 10+ cells
+cell_type_counts = {}
 for _, row in df.iterrows():
-    if row["dataset"] == "gouwens":
-        subclass = row["t-type"][:3]
-        if subclass == "Ser":
-            continue
-
-        cells.append(row["cell_id"])
-        labels.append(subclass)
-
-        if subclass in subclasses:
-            subclasses[subclass] += 1
+    if os.path.exists(f"./gouwens-data/preprocessed_images/{row['Specimen ID']}.png"):
+        if row["t-type"] not in cell_type_counts:
+            cell_type_counts[row["t-type"]] = 1
         else:
-            subclasses[subclass] = 1
+            cell_type_counts[row["t-type"]] += 1
 
-print(subclasses)
-# cells = list(df["cell_id"])
-# labels = list(df["t-type"])
-# labels = [label[:3] for label in labels]
-# types = list(set(labels))
+sig_cell_types = set()
+total_cells = 0
+for cell_type, count in cell_type_counts.items():
+    if count >= 10:
+        sig_cell_types.add(cell_type)
+        total_cells += count
 
-# # create subdirectories
-# for subclass in subclasses:
-#     os.mkdir(f"./gouwens-data/training_images_subclass_modified/{subclass}")
-#     os.mkdir(f"./gouwens-data/test_images_subclass_modified/{t}")
+print("Significant T-types: ", len(sig_cell_types))
+print("Total cells: ", total_cells)
 
-# type_freq = {}
-# for t in labels:
-#     if t in type_freq:
-#         type_freq[t] += 1
-#     else:
-#         type_freq[t] = 1
+cells, labels = [], []
+types = set()
+for _, row in df.iterrows():
+    if row["t-type"] in sig_cell_types and os.path.exists(f"./gouwens-data/preprocessed_images/{row['Specimen ID']}.png"):
+        cells.append(row["Specimen ID"])
+        labels.append(row["T-type"])
+        if row["T-type"] not in types:
+            types.add(row["T-type"])
 
-success = {}
+# create subdirectories
+for t in types:
+    os.mkdir(f"./gouwens-data/training_images_t_type/{t}")
+    os.mkdir(f"./gouwens-data/test_images_t_type/{t}")
+
+type_freq = {}
+for t in labels:
+    if t in type_freq:
+        type_freq[t] += 1
+    else:
+        type_freq[t] = 1
+
+# create subdirectories
+train_dir = f"./gouwens-data/training_images_t_type"
+test_dir = f"./gouwens-data/test_images_t_type"
+if not os.path.isdir(train_dir):
+    os.mkdir(train_dir)
+if not os.path.isdir(test_dir):
+    os.mkdir(test_dir)
+
+for t in types:
+    train_subdir = f"./gouwens-data/training_images_t_type/{t}"
+    test_subdir = f"./gouwens-data/test_images_t_type/{t}"
+    if not os.path.isdir(train_subdir):
+        os.mkdir(train_subdir)
+    if not os.path.isdir(test_subdir):
+        os.mkdir(test_subdir)
+
+test_cell_count = 2     # Number of cells per type in the test dataset
+
+cnt = 0
 for cell, label in zip(cells, labels):
-    try:
-        src = f"./gouwens-data/preprocessed_modified_images/{cell}.png"
-        dst = f"./gouwens-data/training_images_subclass_modified/{label}/{cell}.png"
-        shutil.copy(src, dst)
-        if label in success:
-            success[label] += 1
-        else:
-            success[label] = 1
-    except:
-        print(f"File not found: {cell}.png")
+    src = f"./gouwens-data/preprocessed_images/{cell}.png"
+    
+    if type_freq[label] > test_cell_count:
+        dst = f"./gouwens-data/training_images_t_type/{label}/{cell}.png"
+    else:
+        # Save 2 images per class label for test set
+        dst = f"./gouwens-data/test_images_t_type/{label}/{cell}.png"
 
-    # src = f"./combined-data/preprocessed_images/{cell}.png"
-    # type_freq[label] -= 1
-    # if type_freq[label] > 1:
-    #     dst = f"./combined-data/training_images_type/{label}/{cell}.png"
-    # else:
-    #     # Save 2 images per class label for test set
-    #     dst = f"./combined-data/test_images_type/{label}/{cell}.png"
-    # shutil.copy(src, dst)
+    shutil.copy(src, dst)
+    cnt += 1
+    type_freq[label] -= 1
 
-print(success)
+print(f"Created {len(types)} subfolders with {cnt} cells.")

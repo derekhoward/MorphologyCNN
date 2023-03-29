@@ -32,6 +32,7 @@ class Identity(nn.Module):
 
 
 def main():
+    # change file/directory paths to t_type for T-type feature extraction
     torch.autograd.set_detect_anomaly(True)
     model_path = "gouwens-data/models/vanilla_cnn_gouwens_met_type_modified_b2_lr1e-4_e7_rs2_512"
 
@@ -45,7 +46,7 @@ def main():
 
     # Collect image inputs to run through the model
     test_cells = set()
-    files = glob.glob("./gouwens-data/training_images_met_type_modified/*/*.png") + glob.glob("./gouwens-data/test_images_met_type_modified/*/*.png")
+    files = glob.glob("./gouwens-data/training_images_met_type/*/*.png") + glob.glob("./gouwens-data/test_images_met_type/*/*.png")
     for file in files:
         test_cells.add(int(os.path.splitext(os.path.basename(file))[0]))
     print(f"Test dataset: {len(test_cells)} cells.")
@@ -56,7 +57,7 @@ def main():
     for _, row in metadata.iterrows():
         if row['Specimen ID'] in test_cells:
             # Inference of Gouwens images through the model
-            img = Image.open(f"./gouwens-data/preprocessed_modified_images/{row['Specimen ID']}.png")
+            img = Image.open(f"./gouwens-data/preprocessed_images/{row['Specimen ID']}.png")
             output = model(trans(img).unsqueeze(0))
             embeddings.append(output.squeeze().detach().numpy())
             cell_type.append(row['MET type'])   # Column names: "MET type" or "T type"
@@ -70,7 +71,7 @@ def main():
     embeddings_df["Specimen ID"] = cell_id
     embeddings_df = embeddings_df.set_index("Specimen ID")
     print(embeddings_df.head())
-    embeddings_df.to_csv("./gouwens-data/met_type_embeddings_modified.csv")
+    embeddings_df.to_csv("./gouwens-data/met_type_embeddings.csv")
 
 
 if __name__ == "__main__":

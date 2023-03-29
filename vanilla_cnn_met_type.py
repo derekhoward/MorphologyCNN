@@ -244,7 +244,7 @@ def train(input_dir, model, loss_fn, optimizer, batch_size, num_epochs, augment=
 
 def main():
     torch.autograd.set_detect_anomaly(True)
-    input_dir = "./gouwens-data/training_images_met_type_modified/"
+    input_dir = "./gouwens-data/training_images_met_type/"
 
     # hyperparameters
     batch_size = 2

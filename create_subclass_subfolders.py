@@ -27,15 +27,15 @@ for _, row in df.iterrows():
             subclasses[subclass] = 1
 
 # Create directory
-train_dir = f"./gouwens-data/training_images_subclass_modified"
+train_dir = f"./gouwens-data/training_images_subclass"
 if not os.path.isdir(train_dir):
     os.mkdir(train_dir)
 
 subclass_cell_counts = {}
 for cell, label in zip(cells, labels):
     try:
-        src = f"./gouwens-data/preprocessed_modified_images/{cell}.png"
-        dst = f"./gouwens-data/training_images_subclass_modified/{label}/{cell}.png"
+        src = f"./gouwens-data/preprocessed_images/{cell}.png"
+        dst = f"./gouwens-data/training_images_subclass/{label}/{cell}.png"
 
         shutil.copy(src, dst)
 

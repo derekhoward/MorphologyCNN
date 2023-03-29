@@ -30,7 +30,7 @@ def augment_images(input_dir, output_dir):
             print(f"Augmented {i} images.")
 
 def main():
-    augment_images("./combined-data/training_images_type/", "./combined-data/training_images_type_augmented")
+    augment_images("./gouwens-data/training_images_t_type/", "./gouwens-data/training_images_t_type_augmented")
 
 if __name__ == "__main__":
     main()

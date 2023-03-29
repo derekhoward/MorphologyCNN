@@ -8,7 +8,7 @@ import pandas as pd
 # Create subfolders per dataset with labels as names
 # ******************************************************************************
 
-df = pd.read_csv("./combined-data/combined_metadata_filtered.csv", index_col=0)
+df = pd.read_csv("./combined-data/combined_metadata.csv", index_col=0)
 dataset_df = {
     "gouwens": df[df["dataset"] == "gouwens"],
     "scala": df[df["dataset"] == "scala"]
@@ -45,16 +45,16 @@ for dataset in ["gouwens", "scala"]:
                 types.add(row["t-type"])
 
     # create subdirectories
-    train_dir = f"./{dataset}-data/training_images_type"
-    test_dir = f"./{dataset}-data/test_images_type"
+    train_dir = f"./{dataset}-data/training_images_t_type"
+    test_dir = f"./{dataset}-data/test_images_t_type"
     if not os.path.isdir(train_dir):
         os.mkdir(train_dir)
     if not os.path.isdir(test_dir):
         os.mkdir(test_dir)
 
     for t in types:
-        train_subdir = f"./{dataset}-data/training_images_type/{t}"
-        test_subdir = f"./{dataset}-data/test_images_type/{t}"
+        train_subdir = f"./{dataset}-data/training_images_t_type/{t}"
+        test_subdir = f"./{dataset}-data/test_images_t_type/{t}"
         if not os.path.isdir(train_subdir):
             os.mkdir(train_subdir)
         if not os.path.isdir(test_subdir):
@@ -70,13 +70,13 @@ for dataset in ["gouwens", "scala"]:
     test_cell_count = 2     # Number of cells per type in the test dataset
 
     for cell, label in zip(cells, labels):
-        src = f"./combined-data/preprocessed_images/{cell}.png"
+        src = f"./{dataset}-data/preprocessed_images/{cell}.png"
         if type_freq[label] > test_cell_count:
             # Save to train subdirectory
-            dst = f"./{dataset}-data/training_images_type/{label}/{cell}.png"
+            dst = f"./{dataset}-data/training_images_t_type/{label}/{cell}.png"
         else:
             # Save to test subdirectory
-            dst = f"./{dataset}-data/test_images_type/{label}/{cell}.png"
+            dst = f"./{dataset}-data/test_images_t_type/{label}/{cell}.png"
 
         shutil.copy(src, dst)
         type_freq[label] -= 1
