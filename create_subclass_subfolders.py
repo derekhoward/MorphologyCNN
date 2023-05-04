@@ -3,6 +3,7 @@ import os
 import shutil
 import numpy as np
 import pandas as pd
+#import pdb
 
 
 # ******************************************************************************
@@ -12,6 +13,7 @@ import pandas as pd
 df = pd.read_csv("./combined-data/combined_metadata.csv", index_col=0)
 cells, labels = [], []
 subclasses = {}
+
 for _, row in df.iterrows():
     if row["dataset"] == "gouwens":
         subclass = row["t-type"][:3]
@@ -36,7 +38,8 @@ for cell, label in zip(cells, labels):
     try:
         src = f"./gouwens-data/preprocessed_images/{cell}.png"
         dst = f"./gouwens-data/training_images_subclass/{label}/{cell}.png"
-
+        #pdb.set_trace()
+        os.makedirs(f"./gouwens-data/training_images_subclass/{label}", exist_ok=True)
         shutil.copy(src, dst)
 
         if label in subclass_cell_counts:

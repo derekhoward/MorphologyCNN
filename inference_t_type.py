@@ -28,15 +28,16 @@ def main():
     torch.autograd.set_detect_anomaly(True)
 
     # Load trained model weights
-    model_path = "gouwens-data/models/vanilla_cnn_gouwens_t_type_modified_b2_lr1e-4_e4_rs7_256"
+    model_path = "gouwens-data/models/vanilla_cnn_gouwens_t_type_modified_b2_lr1e-4_e4_rs7_256_vderek"
 
     # model
     model = VanillaCNN()
     model.load_state_dict(torch.load(model_path))
     model.eval()
 
-    metadata = pd.read_csv("gouwens-data/filtered_t_types.csv")
-
+    #metadata = pd.read_csv("gouwens-data/filtered_t_types.csv")
+    metadata = pd.read_csv("combined-data/combined_metadata_filtered.csv")
+    
     types = [
         'Lamp5 Lsp1', 
         'Lamp5 Plch2', 

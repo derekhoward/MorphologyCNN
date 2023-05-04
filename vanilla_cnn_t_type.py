@@ -229,8 +229,8 @@ def train(input_dir, model, loss_fn, optimizer, batch_size, num_epochs, augment=
     # plot_results(num_epochs, train_loss, valid_loss, "Loss", "./gouwens-data/plots/vanilla_loss_t_type.png")
 
     # Uncomment below to save model weights
-    # model_path = './gouwens-data/models/vanilla_cnn_gouwens_met_type_modified_b2_lr1e-4_e7_rs2_512'
-    # torch.save(model.state_dict(), model_path)
+    #model_path = './gouwens-data/models/vanilla_cnn_gouwens_t_type_modified_b2_lr1e-4_e4_rs7_256_vderek_R3'
+    #torch.save(model.state_dict(), model_path)
 
     if test_dir:
         print("Running model on test set ...")
@@ -244,7 +244,8 @@ def train(input_dir, model, loss_fn, optimizer, batch_size, num_epochs, augment=
 
 def main():
     torch.autograd.set_detect_anomaly(True)
-    input_dir = "./gouwens-data/training_images_t_type_modified/"
+    #input_dir = "./gouwens-data/training_images_t_type_modified/"
+    input_dir = "./gouwens-data/training_images_t_type/"
 
     # hyperparameters
     batch_size = 2

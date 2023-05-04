@@ -2,6 +2,8 @@ import os
 import glob
 import numpy as np
 from PIL import Image
+from pathlib import Path
+#import pdb
 
 # Preprocess morphology images to uniform, square input images
 def preprocess_images(input_dir, output_dir, downsize=8, transfer_learning=False):
@@ -12,8 +14,8 @@ def preprocess_images(input_dir, output_dir, downsize=8, transfer_learning=False
             max_width = max(max_width, image.size[0])
             max_height = max(max_height, image.size[1])
     max_dim = max(max_width, max_height)
-
-    resize = 224 if tl else max_dim // downsize
+    #pdb.set_trace()
+    resize = 224 if transfer_learning else max_dim // downsize
     print(resize)
 
     # Resize images to dimension (max_dim, max_dim)
@@ -41,7 +43,19 @@ def main():
 
     # input_dir: directory containing unscaled images (original dimensions in 720x720)
     # output_dir: directory where downscaled images will be stored
-    preprocess_images("./scala-data/images/", "./scala-data/preprocessed_images/", transfer_learning=transfer_learning)
+    
+    print('Processing Gouwens dataset')
+    gouwens_output_p = Path("./gouwens-data/preprocessed_images/")
+    gouwens_output_p.mkdir(exist_ok=True)
+    preprocess_images("./gouwens-data/images/", "./gouwens-data/preprocessed_images/", transfer_learning=transfer_learning)
+    print('Processing Scala dataset')
+    scala_output_p = Path("./scala-data/preprocessed_images/")
+    scala_output_p.mkdir(exist_ok=True)
+    preprocess_images("./scala-data/inhibitory/images/", "./scala-data/preprocessed_images/", transfer_learning=transfer_learning)
+    print('Processing combined dataset')
+    combined_output_p = Path("./combined-data/preprocessed_images/")
+    combined_output_p.mkdir(exist_ok=True)
+    preprocess_images("./combined-data/images/", "./combined-data/preprocessed_images/", transfer_learning=transfer_learning)
 
 if __name__ == "__main__":
     main()
